@@ -1,0 +1,237 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fce4ec; /* Light Pink Background */
+    color: #4a148c; /* Deep Purple Text */
+}
+
+/* --- Navigation Bar Style --- */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #880e4f; /* Darker Pink/Maroon for contrast */
+    padding: 15px 40px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: white;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 25px;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #f8bbd0; /* Soft Pink hover */
+}
+
+/* --- Hero Section Template Style --- */
+.hero-section {
+    background: url('bakery-hero-image.jpg') no-repeat center center/cover; /* Replace with a real image URL */
+    background-color: #f8bbd0; /* Fallback color */
+    height: 70vh; /* Viewport height for a big impact */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white; /* White text for better readability over images */
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Overlay for better text contrast */
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(74, 20, 140, 0.4); /* Dark purple overlay */
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    max-width: 800px;
+}
+
+.hero-content h1 {
+    font-size: 4.5em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.tagline {
+    font-size: 1.8em;
+    font-weight: 300;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.cta-button {
+    background-color: #e91e63; /* Bright Pink CTA */
+    color: white;
+    padding: 15px 30px;
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.2s;
+    display: inline-block;
+}
+
+.cta-button:hover {
+    background-color: #ff80ab;
+    transform: translateY(-2px);
+}
+/* --- End Hero Section Styles --- */
+
+
+main {
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+h2 {
+    color: #e91e63;
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ff80ab;
+    padding-bottom: 10px;
+}
+
+#product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 60px;
+}
+
+.product-card {
+    background-color: white;
+    border: 1px solid #ff80ab;
+    border-radius: 10px;
+    padding: 15px;
+    width: 280px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* --- NEW: Product Image Style --- */
+.product-card img {
+    max-width: 100%;
+    height: 180px; /* Fixed height for consistent card size */
+    object-fit: cover; /* Ensures image covers area without distortion */
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.product-card h3 {
+    color: #880e4f;
+    margin-top: 0;
+}
+
+.price {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #e91e63;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#cart-section {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin: 40px auto;
+    max-width: 700px;
+}
+
+#cart-items {
+    border-top: 1px dashed #ff80ab;
+    padding-top: 15px;
+    min-height: 50px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dotted #f8bbd0;
+}
+
+#cart-summary {
+    text-align: right;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #e91e63;
+    margin-top: 20px;
+}
+
+button {
+    background-color: #880e4f;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #a72d73;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#checkout-btn {
+    display: block;
+    width: 100%;
+    margin-top: 15px;
+    font-size: 1.2em;
+}
+
+#contact {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.hours {
+    font-style: italic;
+    font-weight: bold;
+}
+
+footer {
+    background-color: #4a148c;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 40px;
+}
