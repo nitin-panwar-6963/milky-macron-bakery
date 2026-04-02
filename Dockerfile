@@ -5,7 +5,7 @@ FROM nginx:stable
 COPY . /usr/share/nginx/html/
 
 #give the pst number 
-EXPOSE 80
+EXPOSE 100
 
 #run the server 
 CMD ["nginx" , "-g" , "daemon off;"]
