@@ -6,6 +6,6 @@ services:
     context: .
    container_name: bakery-app
    ports:
-    - "8080:80"
+    - "100:80"
    restart: always
        
