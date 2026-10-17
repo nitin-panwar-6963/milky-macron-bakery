@@ -1,37 +1,30 @@
+
 name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
-    
+    branches: ["main"]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build -t nitin-bakery .
-
-
-  login:
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Build the Docker image
+        run: docker build -t nitin-bakery .
+
       - name: Docker login
-        run: docker login -u ${{secrets.DOCKERUSER}} -p ${{secrets.DOCKERAPI}}
+        if: github.event_name == 'push'
+        run: echo "${{ secrets.DOCKERAPI }}" | docker login -u "${{ secrets.DOCKERUSER }}" --password-stdin
 
-      - name: Tag docker image
-        run: docker image tag nitin-bakery:latest ${{secrets.DOCKERUSER}}/nitin-bakery:latest
+      - name: Tag Docker image
+        if: github.event_name == 'push'
+        run: docker tag nitin-bakery:latest "${{ secrets.DOCKERUSER }}/nitin-bakery:latest"
 
-  push:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Push to Docker image to Dockerhub
-        run: docker push ${{secrets.DOCKERUSER}}/nitin-bakery:latest
+      - name: Push Docker image to Docker Hub
+        if: github.event_name == 'push'
+        run: docker push "${{ secrets.DOCKERUSER }}/nitin-bakery:latest"
