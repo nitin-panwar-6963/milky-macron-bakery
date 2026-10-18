@@ -83,3 +83,10 @@ jobs:
         run: |
           docker push \
             ${{ secrets.DOCKERUSER }}/milky-macron-bakery:latest
+
+  trivy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check trivy version
+        run: trivy --version
+      
