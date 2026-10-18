@@ -1,30 +1,85 @@
 
-name: Docker Image CI
+name: Docker Image Build
 
 on:
   push:
-    branches: ["main"]
+    branches: [main]
   pull_request:
-    branches: ["main"]
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-image:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Build the Docker image
-        run: docker build -t nitin-bakery .
+      - name: Build the image
+        run: docker build -t milky-macron-bakery:latest .
 
-      - name: Docker login
-        if: github.event_name == 'push'
-        run: echo "${{ secrets.DOCKERAPI }}" | docker login -u "${{ secrets.DOCKERUSER }}" --password-stdin
+      - name: Save the image
+        run: docker save -o my-image.tar milky-macron-bakery:latest
 
-      - name: Tag Docker image
-        if: github.event_name == 'push'
-        run: docker tag nitin-bakery:latest "${{ secrets.DOCKERUSER }}/nitin-bakery:latest"
+      - name: Upload the artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: my-image.tar
 
-      - name: Push Docker image to Docker Hub
-        if: github.event_name == 'push'
-        run: docker push "${{ secrets.DOCKERUSER }}/nitin-bakery:latest"
+  tag-image:
+    if: github.event_name == 'push'
+    needs: build-image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download the artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+
+      - name: Load the image
+        run: docker load -i my-image.tar
+
+      - name: Tag the image
+        run: |
+          docker image tag milky-macron-bakery:latest \
+            ${{ secrets.DOCKERUSER }}/milky-macron-bakery:latest
+
+      - name: Save tagged image
+        run: |
+          docker save -o tag-image.tar \
+            ${{ secrets.DOCKERUSER }}/milky-macron-bakery:latest
+
+      - name: Upload tagged artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tag-image
+          path: tag-image.tar
+
+  push-image:
+    if: github.event_name == 'push'
+    needs: tag-image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download the artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tag-image
+
+      - name: Load the image
+        run: docker load -i tag-image.tar
+
+      - name: Login into Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERUSER }}
+          password: ${{ secrets.DOCKERAPI }}
+
+      - name: Push to Docker Hub
+        run: |
+          docker push \
+            ${{ secrets.DOCKERUSER }}/milky-macron-bakery:latest
