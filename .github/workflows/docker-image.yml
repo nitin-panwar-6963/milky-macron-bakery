@@ -123,24 +123,32 @@ jobs:
             -p 8080:80 \
             "${DOCKERUSER}/milky-macron-bakery:latest"
 
-      - name: Get runner IP address
+      - name: Get Runner IP Address
         run: |
           echo "Runner hostname:"
           hostname
 
-          echo "Runner IP addresses:"
+          echo "Runner private/network IP:"
           hostname -I || true
 
           echo "Runner public IP:"
           curl -s https://api.ipify.org
           echo
 
-      - name: Verify container
+      - name: Allow Port 8080 on Runner
         run: |
-          docker ps
-          docker logs milky-macron-bakery
+          sudo ufw allow 8080/tcp || true
 
-      - name: Infinite loop
+      - name: Verify Container and Port
+        run: |
+          echo "Container status:"
+          docker ps
+
+          echo "Application response:"
+          curl --retry 5 --retry-connrefused \
+            --retry-delay 2 http://localhost:8080
+
+      - name: Infinite Loop
         run: |
           while true; do
             echo "GitHub Actions runner is active"
