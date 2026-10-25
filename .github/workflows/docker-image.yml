@@ -32,6 +32,7 @@ jobs:
           name: docker-image
           path: my-image.tar
           retention-days: 1
+          if-no-files-found: error
 
   tag-image:
     if: github.event_name == 'push'
@@ -51,6 +52,11 @@ jobs:
         env:
           DOCKERUSER: ${{ secrets.DOCKERUSER }}
         run: |
+          test -n "$DOCKERUSER" || {
+            echo "DOCKERUSER secret is missing"
+            exit 1
+          }
+
           docker image tag milky-macron-bakery:latest \
             "${DOCKERUSER}/milky-macron-bakery:latest"
 
@@ -67,6 +73,7 @@ jobs:
           name: tag-image
           path: tag-image.tar
           retention-days: 1
+          if-no-files-found: error
 
   push-image:
     if: github.event_name == 'push'
@@ -120,6 +127,7 @@ jobs:
         run: |
           docker run -d \
             --name milky-macron-bakery \
+            -p 80:80 \
             -p 8080:80 \
             "${DOCKERUSER}/milky-macron-bakery:latest"
 
@@ -128,25 +136,33 @@ jobs:
           echo "Runner hostname:"
           hostname
 
-          echo "Runner private/network IP:"
+          echo "Runner network IP addresses:"
           hostname -I || true
 
           echo "Runner public IP:"
           curl -s https://api.ipify.org
           echo
 
-      - name: Allow Port 8080 on Runner
+      - name: Allow Ports 80 and 8080
         run: |
+          sudo ufw allow 80/tcp || true
           sudo ufw allow 8080/tcp || true
 
-      - name: Verify Container and Port
-        run: |
-          echo "Container status:"
-          docker ps
+          echo "Checking listening ports:"
+          sudo ss -tulpn | grep -E ':(80|8080)\b' || true
 
-          echo "Application response:"
+      - name: Verify Container
+        run: |
+          docker ps
+          docker logs milky-macron-bakery
+
+          echo "Testing port 80:"
           curl --retry 5 --retry-connrefused \
-            --retry-delay 2 http://localhost:8080
+            --retry-delay 2 http://localhost:80/
+
+          echo "Testing port 8080:"
+          curl --retry 5 --retry-connrefused \
+            --retry-delay 2 http://localhost:8080/
 
       - name: Infinite Loop
         run: |
