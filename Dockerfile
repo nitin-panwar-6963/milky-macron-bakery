@@ -5,7 +5,7 @@ WORKDIR /app
 
 #update the sytstem
 RUN apy-get update -y && \
-    rm -rm /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*
 
 # copy the code from hopst machiine to ngnix serer
 COPY . /usr/share/nginx/html/
