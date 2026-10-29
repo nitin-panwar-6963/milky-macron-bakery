@@ -4,13 +4,13 @@ FROM nginx:stable
 WORKDIR /app
 
 #update the sytstem
-RUN apy-get update -y && \
+RUN apt-get update -y && \
     rm -rf /var/lib/apt/lists/*
 
 # copy the code from hopst machiine to ngnix serer
 COPY . /usr/share/nginx/html/
 
-#give the pst number 
+#give the pst number
 EXPOSE 80
 
 #run the server 
