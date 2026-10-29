@@ -10,7 +10,7 @@ RUN apy-get update -y && \
 # copy the code from hopst machiine to ngnix serer
 COPY . /usr/share/nginx/html/
 
-#give the pst number 
+#give the pst number
 EXPOSE 80
 
 #run the server 
